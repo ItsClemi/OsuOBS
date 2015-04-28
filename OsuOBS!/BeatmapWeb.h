@@ -27,10 +27,13 @@ public:
 
 public:
 	void StartBeatmapWebThread( );
+	void StopBeatmapWebThread( );
 
+private:
+	std::wstring BmSetIdToBmId( ComPtr<IXMLHTTPRequest>& pReq, wchar_t* szStr, sBeatmapQuery* pQuery );
 	std::wstring GetBeatmapFromSetId( BSTR szData, sBeatmapQuery* pQuery );
 
-	void StopBeatmapWebThread( );
+
 
 public:
 	void RegWebInfoCallback( BmWebQueryFunc f )

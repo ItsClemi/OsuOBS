@@ -16,6 +16,7 @@ CBeatmapWeb::~CBeatmapWeb( )
 
 void CBeatmapWeb::StartBeatmapWebThread( )
 {
+	//=> Peppy if you ever read this: please implement json :(
 	m_threadWebThread = thread( [ this ]( ){
 		//=> Startup web interface
 		CoInitialize( nullptr );
@@ -27,7 +28,6 @@ void CBeatmapWeb::StartBeatmapWebThread( )
 		ComPtr<IXMLHTTPRequest> request;
 		hr = ::CoCreateInstance( CLSID_XMLHTTP60, NULL, CLSCTX_ALL, __uuidof( IXMLHTTPRequest ), ( void** )&request );
 
-
 		while( true )
 		{
 			if( WaitForSingleObject( m_hKillBmWeb, 1000 ) == WAIT_OBJECT_0 )
@@ -38,49 +38,91 @@ void CBeatmapWeb::StartBeatmapWebThread( )
 			{
 				swprintf_s( szBuff, L"https://osu.ppy.sh/s/%d", pQuery->m_nBeatmapSetId );
 
+				wstring szBmId = BmSetIdToBmId( request, szBuff, pQuery );
 
-				//=> Post web request!
-				hr = request->open( _bstr_t( L"GET" ), _bstr_t( szBuff ), _variant_t( VARIANT_FALSE ), _variant_t( ), _variant_t( ) );
-				if( SUCCEEDED( hr ) )
+				if( szBmId != L"" )
 				{
-					hr = request->send( _variant_t( ) );
-
-					long status;
-					hr = request->get_status( &status );
-					if( status == 200 )
+					swprintf_s( szBuff, L"https://osu.ppy.sh%s", szBmId.c_str( ) );
+					
+					//=> Fetch last data.
+					HRESULT hr = request->open( _bstr_t( L"GET" ), _bstr_t( szBuff ), _variant_t( VARIANT_FALSE ), _variant_t( ), _variant_t( ) );
+					if( SUCCEEDED( hr ) )
 					{
-						BSTR szData;
-						if( SUCCEEDED( hr = request->get_responseText( &szData ) ) )
+						hr = request->send( _variant_t( ) );
+
+						long status;
+						hr = request->get_status( &status );
+						if( status == 200 )
 						{
-							wstring szBmQuery = GetBeatmapFromSetId( szData, pQuery );
-							if( szBmQuery != L"" )
+							BSTR szData;
+							if( SUCCEEDED( hr = request->get_responseText( &szData ) ) )
 							{
-								SysFreeString( szData );
+								wstring szHtml = szData;
 
-
-								m_cs.lock( );
+								auto itBeg = szHtml.find( L"<strong>Star Difficulty</strong>" );
+								if( itBeg != wstring::npos )
 								{
-									for( auto i : m_vecCallback )
-										i( pQuery );
-								}
-								m_cs.unlock( );
-							}	
-						}
-					}
-				}
-				else
-				{
-					Log( L"Error | " __FUNCTIONW__ L" | Failed to open IXMLHTTPRequest hr: [ %x ]", hr );
-					SAFE_DELETE( pQuery );
+									auto itEnd = szHtml.find( L")</td>", itBeg );
+									itBeg = szHtml.rfind( L"</div> ", itEnd );
 
-					continue;
+									wstring szDifficulty = wstring( szHtml.begin( ) + itBeg + 8, szHtml.begin( ) + itEnd );
+									pQuery->m_fResult = (float)_wtof( szDifficulty.c_str() );
+
+									m_cs.lock( );
+									{
+										for( auto i : m_vecCallback )
+											i( pQuery );
+									}
+									m_cs.unlock( );
+								}
+						
+								SysFreeString( szData );
+							}
+						}
+					}	
 				}
+
+				SAFE_DELETE( pQuery );
 			}
 		}
 
 		request.Clear( );
 		CoUninitialize( );
 	} );
+}
+
+void CBeatmapWeb::StopBeatmapWebThread( )
+{
+	SetEvent( m_hKillBmWeb );
+	m_threadWebThread.join( );
+}
+
+std::wstring CBeatmapWeb::BmSetIdToBmId( ComPtr<IXMLHTTPRequest>& pReq, wchar_t* szStr, sBeatmapQuery* pQuery )
+{
+	HRESULT hr = pReq->open( _bstr_t( L"GET" ), _bstr_t( szStr ), _variant_t( VARIANT_FALSE ), _variant_t( ), _variant_t( ) );
+	if( SUCCEEDED( hr ) )
+	{
+		hr = pReq->send( _variant_t( ) );
+
+		long status;
+		hr = pReq->get_status( &status );
+		if( status == 200 )
+		{
+			BSTR szData;
+			if( SUCCEEDED( hr = pReq->get_responseText( &szData ) ) )
+			{
+				wstring szBmQuery = GetBeatmapFromSetId( szData, pQuery );
+				if( szBmQuery != L"" )
+				{
+					SysFreeString( szData );
+					return szBmQuery;
+				}
+			}
+		}
+	}
+
+	Log( L"Error | " __FUNCTIONW__ L" | Failed to open IXMLHTTPRequest hr: [ %x ]", hr );
+	return L"";
 }
 
 std::wstring CBeatmapWeb::GetBeatmapFromSetId( BSTR szData, sBeatmapQuery* pQuery )
@@ -118,9 +160,4 @@ std::wstring CBeatmapWeb::GetBeatmapFromSetId( BSTR szData, sBeatmapQuery* pQuer
 	return L"";
 }
 
-void CBeatmapWeb::StopBeatmapWebThread( )
-{
-	SetEvent( m_hKillBmWeb );
-	m_threadWebThread.join( );
-}
 

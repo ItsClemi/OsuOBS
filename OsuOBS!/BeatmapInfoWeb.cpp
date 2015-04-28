@@ -32,6 +32,7 @@ void CBeatmapInfoWeb::Tick( float fSeconds )
 		if( m_bIsDirty )
 		{
 			this->SetString( L"text", std::to_wstring( m_fDifficulty ).c_str( ) );
+			m_bIsDirty = false;
 		}
 
 		m_cs.unlock( );
