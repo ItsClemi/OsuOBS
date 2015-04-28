@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{6ebd6e0b-3d0d-4be5-baa6-30641de54142}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Helper">
+      <UniqueIdentifier>{86dd933b-cdba-44d9-8035-a518edf3fddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageSources">
+      <UniqueIdentifier>{9fcf2cc2-74d9-4a26-83fb-8b0f2ef03f78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{01245911-4913-4a43-9588-5b91c7d33519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageSources\Beatmap">
+      <UniqueIdentifier>{39958894-8cfc-4721-b930-215e7cb3d3a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageSources\User">
+      <UniqueIdentifier>{55331603-1d09-4dfb-88ec-37dcef45564e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageSources\ObsSource">
+      <UniqueIdentifier>{5e172231-c432-4f5a-8634-ba6b005e55cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Core.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TextSource.cpp">
+      <Filter>ImageSources\ObsSource</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatmapName.cpp">
+      <Filter>ImageSources\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="UserRecentActivity.cpp">
+      <Filter>ImageSources\User</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatmapInfoSource.cpp">
+      <Filter>ImageSources\Beatmap</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatmapInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UserRankSource.cpp">
+      <Filter>ImageSources\User</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Common\Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsHelper.h">
+      <Filter>Common\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="TextSource.h">
+      <Filter>ImageSources\ObsSource</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatmapName.h">
+      <Filter>ImageSources\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="UserRecentActivity.h">
+      <Filter>ImageSources\User</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatmapInfoSource.h">
+      <Filter>ImageSources\Beatmap</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatmapInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UserRankSource.h">
+      <Filter>ImageSources\User</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OsuOBS!.rc">
+      <Filter>Common\Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
