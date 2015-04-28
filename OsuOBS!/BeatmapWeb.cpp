@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BeatmapWeb.h"
 
+#include "Core.h"
 
 using namespace std;
 
@@ -16,6 +17,25 @@ CBeatmapWeb::~CBeatmapWeb( )
 
 void CBeatmapWeb::StartBeatmapWebThread( )
 {
+	CCore::GetInstance( )->RegBmChangedEvent( [ this ]( sBeatmapInfo* pInfo ){ 
+
+		if( pInfo == nullptr )
+		{
+			m_cs.lock( );
+			{
+				for( auto i : m_vecCallback )
+					i( nullptr );
+			}
+			m_cs.unlock( );
+		}
+		else
+		{
+			QueryBeatmapDifficulty( new sBeatmapQuery( pInfo->m_szDifficulty, pInfo->m_nBeatmapId, pInfo->m_nBeatmapSetId ) );
+		}
+
+	} );
+
+
 	//=> Peppy if you ever read this: please implement json :(
 	m_threadWebThread = thread( [ this ]( ){
 		//=> Startup web interface
@@ -118,6 +138,8 @@ std::wstring CBeatmapWeb::BmSetIdToBmId( ComPtr<IXMLHTTPRequest>& pReq, wchar_t*
 					return szBmQuery;
 				}
 			}
+
+			SysFreeString( szData );
 		}
 	}
 
@@ -140,6 +162,7 @@ std::wstring CBeatmapWeb::GetBeatmapFromSetId( BSTR szData, sBeatmapQuery* pQuer
 			auto itEndLi = szHtml.find( L"</span></a></li>" );
 			if( itEndLi != wstring::npos )
 			{
+				//=> Add ASCII -> html convert :S
 				wstring szLine = wstring( szHtml.begin( ), szHtml.begin( ) + itEndLi );
 				if( szLine.find( pQuery->m_szDifficulty ) != wstring::npos )
 				{

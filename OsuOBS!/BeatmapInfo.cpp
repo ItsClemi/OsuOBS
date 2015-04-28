@@ -134,7 +134,5 @@ async sBeatmapInfo* CBeatmapInfo::ReadBeatmap( sBeatmapInfo* pInfo, const std::t
 		pInfo->m_fSliderMul = ( float )atof( findNum( "SliderMultiplier:" ).c_str( ) );
 	}
 	
-	CCore::GetInstance( )->GetBmInfoWeb( )->QueryBeatmapDifficulty( new sBeatmapQuery( pInfo->m_szDifficulty, pInfo->m_nBeatmapId, pInfo->m_nBeatmapSetId ) );
-
 	return pInfo;
 }

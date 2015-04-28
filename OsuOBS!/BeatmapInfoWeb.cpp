@@ -12,7 +12,15 @@ CBeatmapInfoWeb::CBeatmapInfoWeb( XElement* pData )
 	CCore::GetInstance( )->GetBmInfoWeb( )->RegWebInfoCallback( [ this ]( sBeatmapQuery* pQuery ){
 		std::lock_guard< std::mutex > l( m_cs );
 		{
-			m_fDifficulty = pQuery->m_fResult;
+			if( pQuery == nullptr )
+			{
+				m_fDifficulty = -1.0f;
+			}
+			else
+			{
+				m_fDifficulty = pQuery->m_fResult;
+			}
+
 			m_bIsDirty = true;
 		}
 	} );
@@ -31,7 +39,18 @@ void CBeatmapInfoWeb::Tick( float fSeconds )
 	{
 		if( m_bIsDirty )
 		{
-			this->SetString( L"text", std::to_wstring( m_fDifficulty ).c_str( ) );
+			if( m_fDifficulty == -1 )
+			{
+				this->SetString( L"text", L"" );
+			}
+			else
+			{
+				wchar_t szBuff[ 32 ];
+				swprintf_s( szBuff, L"%.1f", m_fDifficulty );
+
+				this->SetString( L"text", szBuff );
+			}
+
 			m_bIsDirty = false;
 		}
 
