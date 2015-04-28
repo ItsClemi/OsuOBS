@@ -2,13 +2,28 @@
 #include "BeatmapInfoSource.h"
 #include "Core.h"
 
-
+using namespace std;
 
 CBeatmapInfoSource::CBeatmapInfoSource( XElement* pData )
 	: TextOutputSource( pData )
 {
-	this->SetString( L"text", L"" );
-	m_nId = CCore::GetInstance( )->RegisterBeatmapChangedINT( );
+	this->SetString( L"text", L"[Beatmap info]" );
+
+	CCore::GetInstance( )->RegBmChangedEvent( [ this ]( sBeatmapInfo* pInfo )
+	{ 
+		lock_guard< mutex >	l( m_cs );
+
+		if( pInfo == nullptr )
+		{
+			m_szText = L"";
+		}
+		else
+		{
+
+		}
+
+	} );
+
 }
 
 

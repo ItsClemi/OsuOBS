@@ -12,8 +12,10 @@ public:
 	virtual void Tick( float fSeconds );
 
 private:
-	size_t	m_nId;
-	
+	std::mutex		m_cs;
+	bool			m_bIsDirty;
+
+	std::wstring	m_szText;
 
 };
 
