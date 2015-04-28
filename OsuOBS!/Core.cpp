@@ -15,8 +15,6 @@ CCore* CCore::GetInstance( )
 	return &s_core;
 }
 
-
-
 void CCore::StartOsuThread( )
 {
 	if( m_pSolidVertexShader == nullptr )
@@ -30,19 +28,16 @@ void CCore::StartOsuThread( )
 	}
 
 	GetProcessInfo( )->StartProcessInfo( );
-	GetBmInfo( )->StartBeatmapWebThread();
 	GetUserInfo( )->StartUserThread( );
+	GetBmInfoWeb( )->StartBeatmapWebThread( );
 }
 
 void CCore::StopOsuThread( )
 {
 	GetUserInfo( )->StopUserThread( );
-	GetBmInfo( )->StopBeatmapWebThread( );
 	GetProcessInfo( )->StopProcessInfo( );
+	GetBmInfoWeb( )->StopBeatmapWebThread( );
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//=> Threadfunc
 
 
 /*

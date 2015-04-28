@@ -33,9 +33,8 @@ task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szT
 		sBeatmapInfo* pInfo = this->GetStoredInfo( szFullName );
 		if( pInfo == nullptr )
 		{
-			//=> ToDo: If the difficulty name of a mape is like [  [easy ]] we can't find it!
 			auto nDiff = szTitle->rfind( L" [" );
-			wstring szDiff = wstring( szTitle->begin( ) + nDiff, szTitle->end( ) );
+			wstring szDiff = wstring( szTitle->begin( ) + nDiff + 1 + 1, szTitle->end( ) -1 );
 
 			szTitle->erase( szTitle->begin( ) + nDiff, szTitle->end( ) );
 
@@ -49,8 +48,6 @@ task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szT
 			{
 				pInfo->m_szFullName = szFullName;
 				pInfo->m_szDifficulty = szDiff;
-
-
 			}
 			m_mapBmInfo.insert( make_pair( szFullName, pInfo ) );
 
@@ -136,7 +133,8 @@ async sBeatmapInfo* CBeatmapInfo::ReadBeatmap( sBeatmapInfo* pInfo, const std::t
 		pInfo->m_fApproachRate = ( float )atof( findNum( "ApproachRate:" ).c_str( ) );
 		pInfo->m_fSliderMul = ( float )atof( findNum( "SliderMultiplier:" ).c_str( ) );
 	}
-
+	
+	CCore::GetInstance( )->GetBmInfoWeb( )->QueryBeatmapDifficulty( new sBeatmapQuery( pInfo->m_szDifficulty, pInfo->m_nBeatmapId, pInfo->m_nBeatmapSetId ) );
 
 	return pInfo;
 }

@@ -48,7 +48,7 @@ void CUserInfo::StartUserThread( )
 			hr = request->open( _bstr_t( L"GET" ), _bstr_t( szBuff ), _variant_t( VARIANT_FALSE ), _variant_t( ), _variant_t( ) );
 			if( FAILED( hr ) )
 			{
-				Log( L"Error | Failed to open IXMLHTTPRequest hr: [ %x ]", hr );
+				Log( L"Error | " __FUNCTIONW__ L" | Failed to open IXMLHTTPRequest hr: [ %x ]", hr );
 				continue;
 			}
 
@@ -142,7 +142,7 @@ void CUserInfo::StartUserThread( )
 			}
 
 		}	
-
+		request.Clear( );
 		CoUninitialize( );
 	} );
 }

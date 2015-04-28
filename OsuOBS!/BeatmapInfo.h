@@ -1,5 +1,6 @@
 #pragma once
 
+
 struct sBeatmapInfo
 {
 	std::wstring	m_szFullName;
@@ -15,8 +16,6 @@ struct sBeatmapInfo
 	float			m_fApproachRate = 0.0f;
 	float			m_fSliderMul = 0.0f;
 
-
-	std::atomic< float >		m_fStarDifficulty = 0.0f;
 };
 
 
@@ -45,7 +44,6 @@ public:
 	std::atomic< size_t >	m_nDisplayName = 0;
 
 private:
-
 
 	Concurrency::concurrent_unordered_map< std::wstring, sBeatmapInfo* >	m_mapBmInfo;
 };

@@ -62,6 +62,9 @@
     <ClCompile Include="BeatmapWeb.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="BeatmapInfoWeb.cpp">
+      <Filter>ImageSources\Beatmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -102,6 +105,9 @@
     </ClInclude>
     <ClInclude Include="BeatmapWeb.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatmapInfoWeb.h">
+      <Filter>ImageSources\Beatmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

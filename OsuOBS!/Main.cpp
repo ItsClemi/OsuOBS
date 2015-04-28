@@ -2,6 +2,7 @@
 #include "BeatmapInfoSource.h"
 #include "BeatmapName.h"
 #include "UserRankSource.h"
+#include "BeatmapInfoWeb.h"
 
 #include "Core.h"
 #include "UserInfo.h"
@@ -26,6 +27,7 @@ OBSEXPORT bool LoadPlugin( )
 
 	API->RegisterImageSourceClass( L"OSUOBS-BMPN", L"[OSUOBS]Beatmap name", ( OBSCREATEPROC )_SourceBeatmapName, ( OBSCONFIGPROC )_SourceConfigBeatmapName );
 	API->RegisterImageSourceClass( L"OSUOBS-BMPI", L"[OSUOBS]Beatmap info", ( OBSCREATEPROC )_SourceBeatmapInfo, ( OBSCONFIGPROC )_SourceConfigBeatmapInfo );
+	API->RegisterImageSourceClass( L"OSUOBS-BMSD", L"[OSUOBS]Beatmap Star Difficulty", ( OBSCREATEPROC )_SourceBeatmapWebInfo, ( OBSCONFIGPROC )_SourceConfigBeatmapWebInfo );
 
 	API->RegisterImageSourceClass( L"OSUOBS-USRK", L"[OSUOBS]User rank", ( OBSCREATEPROC )_SourceUserRank, ( OBSCONFIGPROC )_SourceConfigUserRank );
 
