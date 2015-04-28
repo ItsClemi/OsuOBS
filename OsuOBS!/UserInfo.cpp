@@ -41,12 +41,24 @@ void CUserInfo::StartUserThread( )
 			UINT nUserId = 0;
 			eGameMode eMode = eGameMode::eGameModeOsu;
 			GetUserData( &nUserId, &eMode );
+
+			//=> User id not set. don't waste performance and traffic on checking..
+			if( nUserId == 0 )
+			{
+				continue;
+			}
 	
 			//=> https://osu.ppy.sh/pages/include/profile-general.php?u=3413931&m=0
 			swprintf_s( szBuff, L"https://osu.ppy.sh/pages/include/profile-general.php?u=%d&m=%d", nUserId, eMode );
 
 
 			hr = request->open( _bstr_t( L"GET" ), _bstr_t( szBuff ), _variant_t( VARIANT_FALSE ), _variant_t( ), _variant_t( ) );
+			if( FAILED( hr ) )
+			{
+				Log( L"Error | Failed to open IXMLHTTPRequest hr: [ %x ]", hr );
+				continue;
+			}
+
 			hr = request->send( _variant_t( ) );
 
 
@@ -58,6 +70,52 @@ void CUserInfo::StartUserThread( )
 				hr = request->get_responseText( &data );
 				{
 					wstring szHtml( data );
+
+					{ 
+						//=> JSON string would be so comfy :(
+						
+						wstring szHtmlTbl = wstring( szHtml );
+						wstring szUserHref = wstring( L"<b><a href='/u/" + to_wstring( nUserId ) + L"'>" );
+
+						m_nActivities = 0;
+						for( ;; )
+						{
+							auto it = szHtmlTbl.find( szUserHref );
+							if( it != wstring::npos )
+							{
+								szHtmlTbl.erase( szHtmlTbl.begin( ), szHtmlTbl.begin() + it + szUserHref.length() );
+
+								auto itEnd = szHtmlTbl.find( L"</div></td></tr>" );
+								m_aRecentActivity[ m_nActivities++ ] = wstring( szHtmlTbl.begin( ), szHtmlTbl.begin( ) + itEnd );
+							}
+							else break;
+						}
+
+
+						//=> remove html tags from the strings	
+						for( size_t i = 0; i < m_nActivities; i++ )
+						{
+							wstring* sz = &m_aRecentActivity[ i ];
+
+							auto fParser = [ &]( ){
+								auto itB = sz->find( '<' );
+
+								if( itB != wstring::npos )
+								{
+									auto itE = sz->find( '>', itB );
+									{
+										sz->erase( sz->begin( ) + itB, sz->begin( ) + itE + 1);
+									}
+									return true;
+								}
+
+								return false;
+							};
+						
+							while( fParser( ) );
+						}
+					}
+
 
 					auto it = szHtml.find( L"Performance</a>:" );
 					auto itEnd = szHtml.find( L"</b>", it );
@@ -85,7 +143,7 @@ void CUserInfo::StartUserThread( )
 			{
 				m_cs.lock( );
 				{
-					m_szPerformance = L"Failed to query userdata. Status: " + to_wstring( status );
+					m_szPerformance = L"Failed to query user data. Status: " + to_wstring( status );
 				}
 				m_cs.unlock( );
 			}

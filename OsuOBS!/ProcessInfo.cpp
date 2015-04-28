@@ -42,6 +42,7 @@ void CProcessInfo::StopProcessInfo( )
 
 void CProcessInfo::RegBmChangedEvent( BmCallback f )
 {
+	lock_guard< mutex > l( m_cs );
 	m_vecCallbacks.push_back( f );
 }
 

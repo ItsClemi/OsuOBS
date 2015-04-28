@@ -44,6 +44,9 @@ public:
 	bool			m_bNewData = false;
 	std::wstring	m_szPerformance;
 
+	size_t							m_nActivities = 0;
+	std::array< std::wstring, 10 >	m_aRecentActivity;
+
 
 private:
 	HANDLE			m_hKillUserThread = CreateEvent( nullptr, FALSE, FALSE, nullptr );

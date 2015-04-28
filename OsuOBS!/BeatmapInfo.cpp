@@ -23,7 +23,7 @@ task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szT
 		if( szTitle == nullptr )
 		{
 			//=>weird vc bug?
-			return (sBeatmapInfo*)nullptr;
+			return static_cast< sBeatmapInfo* >( nullptr );
 		}
 
 		std::wstring szFullName = *szTitle;

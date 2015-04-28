@@ -34,7 +34,7 @@
 #include <filesystem>
 #include <hash_map>
 #include <thread>	
-
+#include <array>
 
 //=> PPL
 #include <ppl.h>

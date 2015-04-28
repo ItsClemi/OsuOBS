@@ -15,6 +15,12 @@ private:
 	std::mutex		m_cs;
 	bool			m_bIsDirty;
 
+	bool			m_bShowDrain = true;
+	bool			m_bShowCircleSize = true;
+	bool			m_bShowOverallDifficulty = true;
+	bool			m_bShowApprochRate = true;
+	bool			m_bShowSliderMul = true;
+
 	std::wstring	m_szText;
 
 };

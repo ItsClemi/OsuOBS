@@ -15,12 +15,6 @@ CCore* CCore::GetInstance( )
 	return &s_core;
 }
 
-size_t CCore::RegisterBeatmapChangedINT( )
-{
-	m_beatMap.m_vecIsDirty.push_back( false );
-	return m_beatMap.m_vecIsDirty.size( ) - 1;
-}
-
 void CCore::StopOsuThread( )
 {
 	GetUserInfo( )->StopUserThread( );

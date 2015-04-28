@@ -19,14 +19,15 @@ void CUserRankSource::Tick( float fSeconds )
 	TextOutputSource::Tick( fSeconds );
 
 	CUserInfo* pInfo = CCore::GetInstance( )->GetUserInfo( );
-	pInfo->m_cs.lock( );
+	if( pInfo->m_cs.try_lock( ) )
 	{
 		if( pInfo->m_bNewData )
 		{
 			this->SetString( L"text", pInfo->m_szPerformance.c_str( ) );
 		}
+
+		pInfo->m_cs.unlock( );
 	}
-	pInfo->m_cs.unlock( );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
