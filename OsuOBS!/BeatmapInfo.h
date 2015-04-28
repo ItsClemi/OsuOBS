@@ -2,17 +2,21 @@
 
 struct sBeatmapInfo
 {
+	std::wstring	m_szFullName;
+	std::wstring	m_szDifficulty;
 
-	std::wstring m_szFullName;
 
-	size_t		m_nBeatmapId = 0;
-	size_t		m_nBeatmapSetId = 0;
+	size_t			m_nBeatmapId = 0;
+	size_t			m_nBeatmapSetId = 0;
 
-	float		m_fDrain = 0.0f;
-	float		m_fCircleSize = 0.0f;
-	float		m_fOverallDifficulty = 0.0f;
-	float		m_fApproachRate = 0.0f;
-	float		m_fSliderMul = 0.0f;
+	float			m_fDrain = 0.0f;
+	float			m_fCircleSize = 0.0f;
+	float			m_fOverallDifficulty = 0.0f;
+	float			m_fApproachRate = 0.0f;
+	float			m_fSliderMul = 0.0f;
+
+
+	std::atomic< float >		m_fStarDifficulty = 0.0f;
 };
 
 
@@ -26,8 +30,6 @@ public:
 public:
 	Concurrency::task< sBeatmapInfo* > GetInfo( std::shared_ptr< std::wstring > szTitle );
 
-	void SetBeatmapFolder( std::wstring& szPath )	{ m_szBmPath = szPath.c_str(); }
-	
 private:
 	async sBeatmapInfo* ReadBeatmap( sBeatmapInfo* pInfo, const std::tr2::sys::wpath& szFile );
 
@@ -43,7 +45,7 @@ public:
 	std::atomic< size_t >	m_nDisplayName = 0;
 
 private:
-	std::tr2::sys::wpath	m_szBmPath;
+
 
 	Concurrency::concurrent_unordered_map< std::wstring, sBeatmapInfo* >	m_mapBmInfo;
 };

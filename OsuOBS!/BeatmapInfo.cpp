@@ -16,6 +16,7 @@ CBeatmapInfo::~CBeatmapInfo( )
 {
 }
 
+
 //=> TODO: Rewrite it a bit :D
 task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szTitle )
 {
@@ -27,7 +28,6 @@ task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szT
 		}
 
 		std::wstring szFullName = *szTitle;
-
 
 
 		sBeatmapInfo* pInfo = this->GetStoredInfo( szFullName );
@@ -48,6 +48,9 @@ task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szT
 			pInfo = new sBeatmapInfo;
 			{
 				pInfo->m_szFullName = szFullName;
+				pInfo->m_szDifficulty = szDiff;
+
+
 			}
 			m_mapBmInfo.insert( make_pair( szFullName, pInfo ) );
 
@@ -63,8 +66,11 @@ task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szT
 					if( isdigit( f[ 0 ] ) )
 					{
 						auto n = f.find_first_of( ' ' );
-						std::wstring szBeatmapId = std::wstring( f.begin( ), f.begin( ) + n );
+						std::wstring szBmSetId = std::wstring( f.begin( ), f.begin( ) + n );
 						std::wstring szBeatmap = std::wstring( f, n + 1 );
+
+
+						pInfo->m_nBeatmapSetId = _wtoi( szBmSetId.c_str( ) );
 
 						auto fn = szTitle->find( szBeatmap );
 						if( fn != wstring::npos )
@@ -118,14 +124,19 @@ async sBeatmapInfo* CBeatmapInfo::ReadBeatmap( sBeatmapInfo* pInfo, const std::t
 		};
 
 		pInfo->m_nBeatmapId = atoi( findNum( "BeatmapID:" ).c_str( ) );
-		pInfo->m_nBeatmapSetId = atoi( findNum( "BeatmapSetID:" ).c_str( ) );
+		
+		int nBmSetId = atoi( findNum( "BeatmapSetID:" ).c_str( ) );
 
+		if( pInfo->m_nBeatmapSetId != nBmSetId  && nBmSetId != 0 )
+			pInfo->m_nBeatmapSetId = nBmSetId;
+			
 		pInfo->m_fDrain = ( float )atof( findNum( "HPDrainRate:" ).c_str( ) );
 		pInfo->m_fCircleSize = ( float )atof( findNum( "CircleSize:" ).c_str( ) );
 		pInfo->m_fOverallDifficulty = ( float )atof( findNum( "OverallDifficulty:" ).c_str( ) );
 		pInfo->m_fApproachRate = ( float )atof( findNum( "ApproachRate:" ).c_str( ) );
 		pInfo->m_fSliderMul = ( float )atof( findNum( "SliderMultiplier:" ).c_str( ) );
 	}
+
 
 	return pInfo;
 }

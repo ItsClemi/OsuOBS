@@ -25,6 +25,7 @@
 #include <stddef.h>
 #include <olectl.h>
 
+
 //=> Std
 #include <string>
 #include <atomic>
@@ -46,6 +47,11 @@
 //=> Gdi+
 #include <gdiplus.h>
 
+//=> WebAPI (COM)
+#include <InitGuid.h>
+#include <msxml6.h>
+#include <comutil.h>
+#include <comdef.h>
 
 //=> Own stuff
 
@@ -56,6 +62,7 @@
 
 #pragma comment( lib, "OBSApi.lib" )
 #pragma comment( lib, "gdiplus.lib" )
+#pragma comment( lib, "msxml6.lib" )
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

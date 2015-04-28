@@ -59,6 +59,9 @@
     <ClCompile Include="ProcessInfo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="BeatmapWeb.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -95,6 +98,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ProcessInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatmapWeb.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 #include "TextSource.h"
 #include "Core.h"
 
-//=> Taken out of OSB source 
+//=> Taken out of OBS source 
 
 TextOutputSource::TextOutputSource( XElement* data ) 
 	: m_pData( data )

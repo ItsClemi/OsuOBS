@@ -161,6 +161,7 @@
     <ClCompile Include="BeatmapInfo.cpp" />
     <ClCompile Include="BeatmapInfoSource.cpp" />
     <ClCompile Include="BeatmapName.cpp" />
+    <ClCompile Include="BeatmapWeb.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ProcessInfo.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="BeatmapInfo.h" />
     <ClInclude Include="BeatmapInfoSource.h" />
     <ClInclude Include="BeatmapName.h" />
+    <ClInclude Include="BeatmapWeb.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="ProcessInfo.h" />
     <ClInclude Include="TextSource.h" />

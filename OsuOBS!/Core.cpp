@@ -15,11 +15,7 @@ CCore* CCore::GetInstance( )
 	return &s_core;
 }
 
-void CCore::StopOsuThread( )
-{
-	GetUserInfo( )->StopUserThread( );
-	GetProcessInfo( )->StopProcessInfo( );
-}
+
 
 void CCore::StartOsuThread( )
 {
@@ -34,7 +30,15 @@ void CCore::StartOsuThread( )
 	}
 
 	GetProcessInfo( )->StartProcessInfo( );
+	GetBmInfo( )->StartBeatmapWebThread();
 	GetUserInfo( )->StartUserThread( );
+}
+
+void CCore::StopOsuThread( )
+{
+	GetUserInfo( )->StopUserThread( );
+	GetBmInfo( )->StopBeatmapWebThread( );
+	GetProcessInfo( )->StopProcessInfo( );
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

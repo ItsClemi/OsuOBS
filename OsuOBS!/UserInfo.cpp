@@ -1,13 +1,6 @@
 #include "stdafx.h"
 #include "UserInfo.h"
 
-#include <InitGuid.h>
-
-#include <msxml6.h>
-#include <comutil.h>
-#include <comdef.h>
-
-#pragma comment(lib, "msxml6.lib")
 
 
 using namespace std;
@@ -32,7 +25,7 @@ void CUserInfo::StartUserThread( )
 		ComPtr<IXMLHTTPRequest> request;
 		hr = ::CoCreateInstance( CLSID_XMLHTTP60, NULL, CLSCTX_ALL, __uuidof( IXMLHTTPRequest ), ( void** )&request );
 
-		for( ;; )
+		while( true )
 		{
 			DWORD dwRes = WaitForSingleObject( m_hKillUserThread, 1000 );
 			if( dwRes == WAIT_OBJECT_0 )
@@ -158,5 +151,4 @@ void CUserInfo::StopUserThread( )
 {
 	SetEvent( m_hKillUserThread );
 	m_threadUser.join( );
-
 }
