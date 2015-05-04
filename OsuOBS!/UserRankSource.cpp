@@ -7,7 +7,7 @@
 CUserRankSource::CUserRankSource( XElement* pData ) 
 	: TextOutputSource( pData )
 {
-	this->SetString( L"text", L"Performance:" );
+	this->SetString( L"text", L"[Performance]" );
 }
 
 CUserRankSource::~CUserRankSource( )
@@ -24,6 +24,7 @@ void CUserRankSource::Tick( float fSeconds )
 		if( pInfo->m_bNewData )
 		{
 			this->SetString( L"text", pInfo->m_szPerformance.c_str( ) );
+			pInfo->m_bNewData = false;
 		}
 
 		pInfo->m_cs.unlock( );

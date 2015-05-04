@@ -5,7 +5,7 @@
 CUserRecentActivity::CUserRecentActivity( XElement* pData ) 
 	: TextOutputSource( pData )
 {
-
+	this->SetString( L"text", L"[RecentActivty]\n[RecentActivty]\n[RecentActivty]\n[RecentActivty]\n" );
 }
 
 CUserRecentActivity::~CUserRecentActivity( )

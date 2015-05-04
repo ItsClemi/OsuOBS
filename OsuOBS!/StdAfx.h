@@ -36,6 +36,8 @@
 #include <hash_map>
 #include <thread>	
 #include <array>
+#include <iostream>
+
 
 //=> PPL
 #include <ppl.h>

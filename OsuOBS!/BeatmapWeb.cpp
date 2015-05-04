@@ -115,6 +115,9 @@ void CBeatmapWeb::StopBeatmapWebThread( )
 {
 	SetEvent( m_hKillBmWeb );
 	m_threadWebThread.join( );
+
+	lock_guard< mutex >l( m_cs );
+	m_vecCallback.clear( );
 }
 
 std::wstring CBeatmapWeb::BmSetIdToBmId( ComPtr<IXMLHTTPRequest>& pReq, wchar_t* szStr, sBeatmapQuery* pQuery )
@@ -162,8 +165,45 @@ std::wstring CBeatmapWeb::GetBeatmapFromSetId( BSTR szData, sBeatmapQuery* pQuer
 			auto itEndLi = szHtml.find( L"</span></a></li>" );
 			if( itEndLi != wstring::npos )
 			{
-				//=> Add ASCII -> html convert :S
+				auto fToHtml = [ ]( std::wstring &input )
+				{					
+					wchar_t szBuff[ 6 ];
+					for( size_t i = 0; i < input.length( ); i++ )
+					{
+						ZeroMemory( szBuff, sizeof( szBuff ) );
+
+						if( input.at( i ) == '&' && input.at( i + 1 ) == '#' )
+						{
+							const wchar_t* szInput = input.c_str( ) + i + 2;
+							
+							int l = 0;
+							for( int it = 0; it < 6; it++ )
+							{
+								if( *( szInput + it ) == ';' ){
+									l = it;
+									break;
+								}
+
+								szBuff[ it ] = *( szInput + it );
+							}
+
+							if( l == 0 ){
+								break;
+							}
+
+							input.erase( input.begin( ) + i, input.begin( ) + i + l + 3 );
+							
+							input.insert( input.begin( ) + i, (wchar_t)_wtoi( szBuff ) );
+						}
+					}
+				};
+
 				wstring szLine = wstring( szHtml.begin( ), szHtml.begin( ) + itEndLi );
+
+				//=> Add ASCII -> html convert :S 
+				fToHtml( szLine );
+
+
 				if( szLine.find( pQuery->m_szDifficulty ) != wstring::npos )
 				{
 					auto itHref = szLine.find( L"href='/b/" );

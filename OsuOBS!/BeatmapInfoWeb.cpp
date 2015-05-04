@@ -9,6 +9,8 @@
 CBeatmapInfoWeb::CBeatmapInfoWeb( XElement* pData ) 
 	: TextOutputSource( pData )
 {
+	this->SetString( L"text", L"[WebInfo]" );
+
 	CCore::GetInstance( )->GetBmInfoWeb( )->RegWebInfoCallback( [ this ]( sBeatmapQuery* pQuery ){
 		std::lock_guard< std::mutex > l( m_cs );
 		{
@@ -46,7 +48,7 @@ void CBeatmapInfoWeb::Tick( float fSeconds )
 			else
 			{
 				wchar_t szBuff[ 32 ];
-				swprintf_s( szBuff, L"%.1f", m_fDifficulty );
+				swprintf_s( szBuff, L"S: %.1f", m_fDifficulty );
 
 				this->SetString( L"text", szBuff );
 			}

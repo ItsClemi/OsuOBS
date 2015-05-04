@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "UserInfo.h"
-
+#include "Config.h"
 
 
 using namespace std;
@@ -20,6 +20,8 @@ void CUserInfo::StartUserThread( )
 		CoInitialize( NULL );
 		
 		wchar_t szBuff[ 512 ];
+		ULONGLONG dwNextUpdate = 0;
+
 
 		HRESULT hr;
 		ComPtr<IXMLHTTPRequest> request;
@@ -27,22 +29,42 @@ void CUserInfo::StartUserThread( )
 
 		while( true )
 		{
-			DWORD dwRes = WaitForSingleObject( m_hKillUserThread, 1000 );
+			DWORD dwRes = WaitForSingleObject( m_hKillUserThread, 100 );
 			if( dwRes == WAIT_OBJECT_0 )
 				break;
 
-			UINT nUserId = 0;
-			eGameMode eMode = eGameMode::eGameModeOsu;
-			GetUserData( &nUserId, &eMode );
+			if( dwNextUpdate > GetTickCount64( ) )
+			{
+				//=> Process every 30s we don't need real time update here. 
+				//=> But the thread needs to check if the user has stopped streaming
+				
+				if( m_bForceUpdate == false )
+				{
+					continue;
+				}
+				else
+				{
+					m_bForceUpdate = false;
+				}
+			}
+			else
+			{
+				dwNextUpdate = GetTickCount64( ) + 30000;
+			}
 
+
+			UINT nUserId = CConfig::GetInstance()->GetUserId();
+			eGameMode eMode = CConfig::GetInstance()->GetGameMode();
+			
 			//=> User id not set. don't waste performance and traffic on checking..
 			if( nUserId == 0 )
 			{
 				continue;
 			}
 	
-			//=> https://osu.ppy.sh/pages/include/profile-general.php?u=3413931&m=0
-			swprintf_s( szBuff, L"https://osu.ppy.sh/pages/include/profile-general.php?u=%d&m=%d", nUserId, eMode );
+
+			//=> Generate random number so IE doesn't cache the web result.
+			swprintf_s( szBuff, L"https://osu.ppy.sh/pages/include/profile-general.php?u=%d&m=%d?%d", nUserId, eMode, rand( ) );
 
 
 			hr = request->open( _bstr_t( L"GET" ), _bstr_t( szBuff ), _variant_t( VARIANT_FALSE ), _variant_t( ), _variant_t( ) );
@@ -57,6 +79,8 @@ void CUserInfo::StartUserThread( )
 
 			long status;
 			hr = request->get_status( &status );
+			
+		
 			if( status == 200 )
 			{
 				BSTR data;
@@ -140,8 +164,9 @@ void CUserInfo::StartUserThread( )
 				}
 				m_cs.unlock( );
 			}
-
 		}	
+
+
 		request.Clear( );
 		CoUninitialize( );
 	} );

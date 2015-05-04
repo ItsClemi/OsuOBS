@@ -26,6 +26,12 @@
     <Filter Include="ImageSources\ObsSource">
       <UniqueIdentifier>{5e172231-c432-4f5a-8634-ba6b005e55cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dialog">
+      <UniqueIdentifier>{27b80dc1-f9f5-4741-91b4-e16cf144e597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{d73cf368-12f1-4352-824b-af9032b08e8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -47,23 +53,29 @@
     <ClCompile Include="BeatmapInfoSource.cpp">
       <Filter>ImageSources\Beatmap</Filter>
     </ClCompile>
-    <ClCompile Include="BeatmapInfo.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="UserRankSource.cpp">
       <Filter>ImageSources\User</Filter>
     </ClCompile>
-    <ClCompile Include="UserInfo.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="BeatmapInfoWeb.cpp">
+      <Filter>ImageSources\Beatmap</Filter>
     </ClCompile>
-    <ClCompile Include="ProcessInfo.cpp">
+    <ClCompile Include="Config.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatmapInfo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="BeatmapWeb.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="BeatmapInfoWeb.cpp">
-      <Filter>ImageSources\Beatmap</Filter>
+    <ClCompile Include="ProcessInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="AboutDlg.cpp">
+      <Filter>Dialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,28 +103,39 @@
     <ClInclude Include="BeatmapInfoSource.h">
       <Filter>ImageSources\Beatmap</Filter>
     </ClInclude>
-    <ClInclude Include="BeatmapInfo.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="UserRankSource.h">
       <Filter>ImageSources\User</Filter>
     </ClInclude>
-    <ClInclude Include="UserInfo.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="BeatmapInfoWeb.h">
+      <Filter>ImageSources\Beatmap</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessInfo.h">
+    <ClInclude Include="Config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatmapInfo.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="BeatmapWeb.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="BeatmapInfoWeb.h">
-      <Filter>ImageSources\Beatmap</Filter>
+    <ClInclude Include="ProcessInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AboutDlg.h">
+      <Filter>Dialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OsuOBS!.rc">
       <Filter>Common\Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\Clemens\Desktop\AboutOSUOBS_PolygonAdd.bmp">
+      <Filter>Common\Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -1,11 +1,5 @@
 #pragma once
 
-enum eGameMode : byte{
-	eGameModeOsu = 0,
-	eGameModeTaiko = 1,
-	eGameModeCTB = 2,
-	eGameModeMania = 3
-};
 
 class CUserInfo
 {
@@ -18,25 +12,7 @@ public:
 	void StopUserThread( );
 
 public:
-	void SetUserId( UINT nId )
-	{
-		std::lock_guard< std::mutex > l( m_cs );
-		m_nUserId = nId;
-	}
-	
-	UINT GetUserId( )
-	{
-		std::lock_guard< std::mutex > l( m_cs );
-		return m_nUserId;
-	}
-
-	void GetUserData( UINT* nUserId, eGameMode* eMode )
-	{
-		std::lock_guard< std::mutex > l( m_cs );
-
-		*nUserId = m_nUserId;
-		*eMode = m_eGameMode;
-	}
+	void SetForceUpdate( ) { m_bForceUpdate = true; }
 
 
 public:
@@ -45,16 +21,12 @@ public:
 	std::wstring	m_szPerformance;
 
 	size_t							m_nActivities = 0;
-	std::array< std::wstring, 10 >	m_aRecentActivity;
+	std::array< std::wstring, 4 >	m_aRecentActivity;
 
+	std::atomic< bool >				m_bForceUpdate = false;
 
 private:
 	HANDLE			m_hKillUserThread = CreateEvent( nullptr, FALSE, FALSE, nullptr );
 	std::thread		m_threadUser;
-
-	eGameMode		m_eGameMode = eGameMode::eGameModeOsu;
-	UINT			m_nUserId = 0;
-
-
 };
 

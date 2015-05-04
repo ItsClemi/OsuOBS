@@ -9,6 +9,8 @@
 
 CBeatmapName::CBeatmapName( XElement* pData ) : TextOutputSource( pData )
 {
+	this->SetString( L"text", L"[BeatmapName]" );
+
 	CCore::GetInstance( )->RegBmChangedEvent( [ this ]( sBeatmapInfo* pInfo ){
 		std::lock_guard< std::mutex > l( m_cs );
 
@@ -33,7 +35,6 @@ void CBeatmapName::Tick( float fSeconds )
 {
 	TextOutputSource::Tick( fSeconds );
 
-	//=> If the mutex is not free / try to set it with the next frame
 	if( m_cs.try_lock( ) )
 	{
 		if( m_bIsDirty )
@@ -44,7 +45,6 @@ void CBeatmapName::Tick( float fSeconds )
 
 		m_cs.unlock( );
 	}
-
 }
 
 
