@@ -1148,7 +1148,7 @@ INT_PTR CALLBACK ConfigureTextProc( HWND hwnd, UINT message, WPARAM wParam, LPAR
 	return 0;
 }
 
-bool STDCALL ConfigureTextSource( XElement* element, bool bCreating )
+bool STDCALL ConfigureTextSource( XElement *element, bool bCreating, bool bUseParent /*= false */ )
 {
 	if( !element )
 	{
@@ -1161,7 +1161,15 @@ bool STDCALL ConfigureTextSource( XElement* element, bool bCreating )
 		data = element->CreateElement( TEXT( "data" ) );
 
 	ConfigTextSourceInfo configInfo;
-	configInfo.lpName = element->GetName( );
+	if( bUseParent )
+	{
+		configInfo.lpName = element->GetParent( )->GetName();
+	}
+	else
+	{
+		configInfo.lpName = element->GetName( );
+	}
+
 	configInfo.data = data;
 
 	if( OBSDialogBox( g_hInstance, MAKEINTRESOURCE( IDD_SETUPFONT ), API->GetMainWindow( ), ConfigureTextProc, ( LPARAM )&configInfo ) == IDOK )

@@ -4,6 +4,7 @@
 #include "UserInfo.h"
 #include "Core.h"
 
+
 CUserRankSource::CUserRankSource( XElement* pData ) 
 	: TextOutputSource( pData )
 {
@@ -41,7 +42,7 @@ ImageSource* STDCALL _SourceUserRank( XElement* data )
 	return new CUserRankSource( data );
 }
 
-bool STDCALL _SourceConfigUserRank( XElement *element, bool bCreating )
-{
-	return ConfigureTextSource( element, bCreating );
+bool STDCALL _SourceConfigUserRank( XElement* pElement, bool bCreating )
+{	
+	return ConfigureTextSource( pElement, bCreating );
 }

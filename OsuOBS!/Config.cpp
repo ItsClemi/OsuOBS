@@ -115,7 +115,7 @@ INT_PTR CALLBACK ConfigDlgProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 				case IDC_ABOUT:
 				{
 					HWND hDlg;
-					hDlg = CreateDialogParam( g_hInstance, MAKEINTRESOURCE( IDD_ABOUT ), 0, AboutDlgProc, 0 );
+					hDlg = CreateDialogParamW( g_hInstance, MAKEINTRESOURCE( IDD_ABOUT ), 0, AboutDlgProc, 0 );
 					ShowWindow( hDlg, 10 );
 					break;
 				}

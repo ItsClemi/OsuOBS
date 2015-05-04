@@ -62,7 +62,7 @@ async void CProcessInfo::CheckBmChanged( )
 	static int s_nOldTitleLen = 0;
 
 
-	wchar_t szBuffer[ 256 ];
+	wchar_t szBuffer[ 256 ] = { 0 };
 	int n = GetWindowTextW( m_hWnd, szBuffer, ARRAYSIZE( szBuffer ) - 1 );
 	if( n > 0 && n != s_nOldTitleLen )
 	{
@@ -106,7 +106,11 @@ async void CProcessInfo::TryFindProcess( )
 			m_hWnd = GetWindowById( m_dwPid );
 			if( ::IsWindow(m_hWnd) )
 			{
-				m_bProcessAlive = true;
+				GetWindowTextW( m_hWnd, szBuffer, ARRAYSIZE( szBuffer ) - 1 );
+				if( wcscmp( szBuffer, L"osu! (loading)" ) != 0 )
+				{
+					m_bProcessAlive = true;
+				}
 			}
 		}
 		else

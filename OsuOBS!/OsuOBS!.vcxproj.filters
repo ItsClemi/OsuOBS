@@ -77,6 +77,9 @@
     <ClCompile Include="AboutDlg.cpp">
       <Filter>Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="Dialog2.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -125,6 +128,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="AboutDlg.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog2.h">
       <Filter>Dialog</Filter>
     </ClInclude>
   </ItemGroup>

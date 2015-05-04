@@ -37,11 +37,11 @@ public:
 		return baseSize;
 	}
 
-	void UpdateSettings( );
+	virtual void UpdateSettings( );
 
 	void SetString( CTSTR lpName, CTSTR lpVal );
 
-	void SetInt( CTSTR lpName, int iValue );
+	virtual void SetInt( CTSTR lpName, int iValue );
 
 	void SetFloat( CTSTR lpName, float fValue );
 
@@ -178,4 +178,4 @@ inline CTSTR GetFontFace( ConfigTextSourceInfo *configInfo, HWND hwndFontList )
 }
 
 
-bool STDCALL ConfigureTextSource( XElement *element, bool bCreating );
+bool STDCALL ConfigureTextSource( XElement *element, bool bCreating, bool bUseParent = false );
