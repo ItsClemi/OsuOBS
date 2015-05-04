@@ -10,6 +10,10 @@ public:
 public:
 	virtual void Tick( float fSeconds );
 
+private:
+	std::mutex		m_cs;
+	std::wstring	m_szPerformance;
+
 };
 
 ImageSource* STDCALL _SourceUserRank( XElement *data );

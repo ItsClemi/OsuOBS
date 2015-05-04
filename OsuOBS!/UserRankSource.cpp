@@ -8,6 +8,13 @@ CUserRankSource::CUserRankSource( XElement* pData )
 	: TextOutputSource( pData )
 {
 	this->SetString( L"text", L"[Performance]" );
+
+	//=> TODO: IsDirty check
+	CCore::GetInstance( )->GetUserInfo( )->RegisterCallbackPerformance( [ this ]( std::shared_ptr< std::wstring > szPerformance ){ 
+		std::lock_guard< std::mutex > l( m_cs );
+
+		m_szPerformance = *szPerformance;
+	} );
 }
 
 CUserRankSource::~CUserRankSource( )
@@ -18,16 +25,11 @@ void CUserRankSource::Tick( float fSeconds )
 {
 	TextOutputSource::Tick( fSeconds );
 
-	CUserInfo* pInfo = CCore::GetInstance( )->GetUserInfo( );
-	if( pInfo->m_cs.try_lock( ) )
+	if( m_cs.try_lock( ) )
 	{
-		if( pInfo->m_bNewData )
-		{
-			this->SetString( L"text", pInfo->m_szPerformance.c_str( ) );
-			pInfo->m_bNewData = false;
-		}
-
-		pInfo->m_cs.unlock( );
+		this->SetString( L"text", m_szPerformance.c_str( ) );
+			
+		m_cs.unlock( );
 	}
 }
 

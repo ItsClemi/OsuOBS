@@ -5,6 +5,8 @@
 
 using namespace std;
 
+//=> README: Yea, I don't like parsing that much :/
+
 CUserInfo::CUserInfo( )
 {
 }
@@ -55,7 +57,6 @@ void CUserInfo::StartUserThread( )
 
 			UINT nUserId = CConfig::GetInstance()->GetUserId();
 			eGameMode eMode = CConfig::GetInstance()->GetGameMode();
-			
 			//=> User id not set. don't waste performance and traffic on checking..
 			if( nUserId == 0 )
 			{
@@ -88,9 +89,12 @@ void CUserInfo::StartUserThread( )
 				{
 					wstring szHtml( data );
 
+					m_csA.lock( );
+					if( m_vecActivity.size() > 0 )
 					{ 
 						//=> JSON string would be so comfy :(
-						
+						m_csA.unlock( );
+
 						wstring szHtmlTbl = wstring( szHtml );
 						wstring szUserHref = wstring( L"<b><a href='/u/" + to_wstring( nUserId ) + L"'>" );
 
@@ -103,7 +107,9 @@ void CUserInfo::StartUserThread( )
 								szHtmlTbl.erase( szHtmlTbl.begin( ), szHtmlTbl.begin() + it + szUserHref.length() );
 
 								auto itEnd = szHtmlTbl.find( L"</div></td></tr>" );
-								m_aRecentActivity[ m_nActivities++ ] = wstring( szHtmlTbl.begin( ), szHtmlTbl.begin( ) + itEnd );
+								
+								auto itBeg = szHtmlTbl.find( L" #" );
+								m_aRecentActivity[ m_nActivities++ ] = wstring( szHtmlTbl.begin( ) + itBeg, szHtmlTbl.begin( ) + itEnd );
 							}
 							else break;
 						}
@@ -131,27 +137,54 @@ void CUserInfo::StartUserThread( )
 						
 							while( fParser( ) );
 						}
+
+						//=> Call callbacks
+						auto vec = make_shared< vector< wstring > >( );
+
+						for( size_t i = 0; i < m_nActivities; i++ )
+						{
+							vec->push_back( m_aRecentActivity[ i ] );
+						}
+
+						m_csA.lock( );
+						{
+							for( auto i : m_vecActivity )
+								i( vec );
+						}
+						m_csA.unlock( );
+					}
+					else
+					{
+						//=> Don't parse if the user doesn't have an activity source
+						m_csA.unlock( );
 					}
 
 
 					auto it = szHtml.find( L"Performance</a>:" );
 					auto itEnd = szHtml.find( L"</b>", it );
 
-					m_cs.lock( );
-					{
+			
+						std::wstring szPerformance;
+
 						if( it != wstring::npos && itEnd != wstring::npos )
 						{
-							m_szPerformance = wstring( szHtml.begin( ) + it + 16, szHtml.begin( ) + itEnd );
-							m_szPerformance.insert( 0, L"Performance: " );
+							szPerformance = wstring( szHtml.begin( ) + it + 16, szHtml.begin( ) + itEnd );
+							szPerformance.insert( 0, L"Performance: " );
 						}
 						else
 						{
-							m_szPerformance = L"No information recorded!";
+							szPerformance = L"No information recorded!";
 						}
 
-						m_bNewData = true;
-					}
-					m_cs.unlock( );
+						m_csP.lock( );
+						{
+							for( auto i : m_vecPerformance )
+							{
+								i( make_shared< wstring >( szPerformance ) );
+							}
+						}
+						m_csP.unlock( );
+			
 				
 				}
 				SysFreeString( data );
@@ -176,4 +209,14 @@ void CUserInfo::StopUserThread( )
 {
 	SetEvent( m_hKillUserThread );
 	m_threadUser.join( );
+
+	lock_guard< mutex > lA( m_csA );
+	{
+		m_vecActivity.clear( );
+	}
+
+	lock_guard< mutex > lP( m_csP );
+	{
+		m_vecPerformance.clear( );
+	}
 }

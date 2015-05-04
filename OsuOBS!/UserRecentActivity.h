@@ -9,6 +9,13 @@ public:
 
 public:
 	virtual void Tick( float fSeconds );
+
+private:
+	bool		m_bNewData = false;
+
+	std::mutex	m_cs;
+	std::vector< std::wstring >		m_vecActivity;
+
 };
 
 ImageSource* STDCALL _SourceUserRecentInfo( XElement* pData );

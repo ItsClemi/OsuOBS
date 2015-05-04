@@ -96,6 +96,15 @@ INT_PTR CALLBACK ConfigDlgProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
 			eGameMode eMode = CConfig::GetInstance( )->GetGameMode( );
 
+			HWND hWndMode = GetDlgItem( hwnd, IDC_SETMODE );
+			SendMessage( hWndMode, CB_ADDSTRING, 0, reinterpret_cast< LPARAM >( L"Osu!" ) );
+			SendMessage( hWndMode, CB_ADDSTRING, 0, reinterpret_cast< LPARAM >( L"Taiko" ) );
+			SendMessage( hWndMode, CB_ADDSTRING, 0, reinterpret_cast< LPARAM >( L"Catch The Beat" ) );
+			SendMessage( hWndMode, CB_ADDSTRING, 0, reinterpret_cast< LPARAM >( L"Osu!Mainia" ) );
+			SendMessage( hWndMode, CB_SETCURSEL, static_cast< WPARAM >( eMode ), 0 );
+
+
+
 			return TRUE;
 		}
 
@@ -114,8 +123,10 @@ INT_PTR CALLBACK ConfigDlgProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 				{
 					wchar_t szBuffer[ 256 ];
 					GetWindowTextW( GetDlgItem( hwnd, IDC_EDIT_BANCHO_NAME ), szBuffer, ARRAYSIZE( szBuffer ) );
-
 					CConfig::GetInstance()->SetUserId( _wtoi( szBuffer ) );
+
+					LRESULT sel = SendMessage( GetDlgItem( hwnd, IDC_SETMODE ), CB_GETCURSEL, ( WPARAM )0, ( LPARAM )0 );
+					CConfig::GetInstance( )->SetGameMode( (eGameMode)sel );
 
 
 					CCore::GetInstance( )->GetUserInfo( )->SetForceUpdate( );
