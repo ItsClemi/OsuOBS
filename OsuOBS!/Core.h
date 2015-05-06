@@ -21,7 +21,8 @@ public:
 
 public:	//=> Better coding style ! >> forward
 	
-	void RegBmChangedEvent( CProcessInfo::BmCallback f )		{ GetProcessInfo( )->RegBmChangedEvent( f ); }
+	size_t	RegBmChangedEvent( CProcessInfo::BmCallback f )		{ return GetProcessInfo( )->RegBmChangedEvent( f ); }
+	void	UnregBmChangedEvent( size_t nId )					{ GetProcessInfo( )->UnregBmChangedEvent( nId ); }
 
 
 public:

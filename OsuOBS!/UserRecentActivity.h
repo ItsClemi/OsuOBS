@@ -20,9 +20,10 @@ private:
 	XElement*	m_pData;
 
 	std::mutex	m_cs;
-	size_t		m_nRowCount = 5;
+	size_t		m_nRowCount;
 	std::vector< std::wstring >		m_vecActivity;
 
+	size_t		m_nCallbackId;
 };
 
 
@@ -32,7 +33,6 @@ struct ConfigActivitySourceInfo
 	XElement*	m_pElement;
 
 	bool		m_bCreating;
-
 };
 
 

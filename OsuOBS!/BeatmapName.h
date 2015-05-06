@@ -11,6 +11,8 @@ public:
 	virtual void Tick( float fSeconds );
 
 private:
+	size_t			m_nCallbackId;
+	
 	std::mutex		m_cs;
 	std::wstring	m_szName;
 	bool			m_bIsDirty = false;

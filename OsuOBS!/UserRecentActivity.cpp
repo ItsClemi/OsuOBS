@@ -6,6 +6,7 @@
 
 #include "Dialog2.h"
 
+#include "Config.h"
 
 using namespace std;
 
@@ -18,9 +19,11 @@ CUserRecentActivity::CUserRecentActivity( XElement* pData )
 	: TextOutputSource( pData ), 
 	m_pData( pData )
 {
-	this->SetString( L"text", L"[RecentActivty]\n[RecentActivty]\n[RecentActivty]\n[RecentActivty]\n" );
+	this->SetString( L"text", L"[RecentActivty]\n" );
+	m_nRowCount = pData->GetInt( L"rowCount", 5 );
 
-	CCore::GetInstance( )->GetUserInfo( )->RegisterCallbackActivity( [ this ]( shared_ptr< vector< wstring > > vec ){
+	m_nCallbackId = CCore::GetInstance( )->GetUserInfo( )->RegisterCallbackActivity( [ this ]( shared_ptr< vector< wstring > > vec )
+	{
 
 		lock_guard< mutex > l( m_cs );
 
@@ -31,12 +34,16 @@ CUserRecentActivity::CUserRecentActivity( XElement* pData )
 			m_vecActivity.push_back( vec->at( i ) );
 		}
 
+		if( m_nRowCount > vec->size( ) )
+			m_nRowCount = vec->size( );
+
 		m_bNewData = true;
 	} );
 }
 
 CUserRecentActivity::~CUserRecentActivity( )
 {
+	CCore::GetInstance( )->GetUserInfo( )->UnregisterCallbackActivity( m_nCallbackId );
 }
 
 void CUserRecentActivity::Tick( float fSeconds )
@@ -48,7 +55,7 @@ void CUserRecentActivity::Tick( float fSeconds )
 		if( m_bNewData )
 		{
 			wstring szOut;
-			for( int i = 0; i < m_nRowCount; i++ )
+			for( size_t i = 0; i < (m_nRowCount < m_vecActivity.size( ) ? m_nRowCount : m_vecActivity.size()); i++ )
 			{
 				szOut += m_vecActivity[ i ];
 				szOut += '\n';
@@ -127,7 +134,7 @@ INT_PTR CALLBACK ConfigureActivityProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 				{
 					ConfigActivitySourceInfo* pConfig = reinterpret_cast< ConfigActivitySourceInfo* >( GetWindowLongPtr( hWnd, DWLP_USER ) );
 
-					ConfigureTextSource( pConfig->m_pElement, pConfig->m_bCreating, true );
+					ConfigureTextSource( pConfig->m_pElement->GetParent(), pConfig->m_bCreating, true );
 
 					break;
 				}
@@ -138,19 +145,18 @@ INT_PTR CALLBACK ConfigureActivityProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 					{
 						int val = ( int )SendMessage( GetWindow( ( HWND )lParam, GW_HWNDNEXT ), UDM_GETPOS32, 0, 0 );
 
-						ConfigActivitySourceInfo *configInfo = ( ConfigActivitySourceInfo* )GetWindowLongPtr( hWnd, DWLP_USER );
+						ConfigActivitySourceInfo* configInfo = ( ConfigActivitySourceInfo* )GetWindowLongPtr( hWnd, DWLP_USER );
 						if( !configInfo ) break;
 
 						ImageSource *source = API->GetSceneImageSource( configInfo->m_szName );
 						if( source )
 						{
-							switch( LOWORD( wParam ) )
+							if( LOWORD( wParam ) == IDC_ROW_NUM )
 							{
-								case IDC_ROW_NUM:      source->SetInt( TEXT( "rowCount" ), val ); break;
+								source->SetInt( TEXT( "rowCount" ), val );
 							}
 						}
 					}
-
 
 					break;
 				}
@@ -165,19 +171,18 @@ INT_PTR CALLBACK ConfigureActivityProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 					UINT nRowCount = ( UINT )SendMessage( GetDlgItem( hWnd, IDC_SPIN_ROW_NUM ), UDM_GETPOS32, 0, 0 );
 					data->SetInt( L"rowCount", nRowCount );
 
-
 				}
 				case IDCANCEL:
 					if( LOWORD( wParam ) == IDCANCEL )
 						DoCancelStuff( hWnd );
 
 					EndDialog( hWnd, LOWORD( wParam ) );
-
-				case WM_CLOSE:
-					DoCancelStuff( hWnd );
-					EndDialog( hWnd, IDCANCEL );
 			}
 			break;
+
+		case WM_CLOSE:
+			DoCancelStuff( hWnd );
+			EndDialog( hWnd, IDCANCEL );
 	}
 	return 0;
 }
@@ -312,7 +317,7 @@ bool STDCALL _SourceConfigUserRecentInfo2( XElement* pElement, bool bCreating )
 	}
 
 	XElement *data = pElement->GetElement( TEXT( "data" ) );
-	if( !data )
+	if( !data ) 
 		data = pElement->CreateElement( TEXT( "data" ) );
 
 

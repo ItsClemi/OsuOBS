@@ -15,16 +15,34 @@ public:
 	void StopUserThread( );
 
 public:
-	void RegisterCallbackPerformance( fCallbackPerformance f ) {
+	size_t RegisterCallbackPerformance( fCallbackPerformance f ) {
 		std::lock_guard< std::mutex > l( m_csP );
 		m_vecPerformance.push_back( f );
+
+		return m_vecPerformance.size( ) - 1;
 	}
 
-	void RegisterCallbackActivity( fCallbackActivity f ) {
+	size_t RegisterCallbackActivity( fCallbackActivity f ) {
 		std::lock_guard< std::mutex > l( m_csA );
 		m_vecActivity.push_back( f );
+
+		return m_vecActivity.size( ) - 1;
 	}
-	
+
+public:
+	void UnregisterCallbackActivity( size_t nId )
+	{
+		std::lock_guard< std::mutex > l( m_csA );
+		m_vecActivity.erase( m_vecActivity.begin( ) + nId );
+	}
+
+	void UnregisterCallbackPerformance( size_t nId )
+	{
+		std::lock_guard< std::mutex > l( m_csP );
+		m_vecPerformance.erase( m_vecPerformance.begin( ) + nId );
+	}
+
+
 
 public:
 	void SetForceUpdate( ) { m_bForceUpdate = true; }

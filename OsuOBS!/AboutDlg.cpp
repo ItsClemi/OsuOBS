@@ -42,7 +42,6 @@ void OnPaint( HWND hWnd, HDC dc )
 	g.ReleaseHDC( dc );
 }
 
-
 INT_PTR CALLBACK AboutDlgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	PAINTSTRUCT ps;
@@ -61,6 +60,7 @@ INT_PTR CALLBACK AboutDlgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 			EndPaint( hWnd, &ps );
 			return FALSE;
 	}
+
 
 	return FALSE;
 }

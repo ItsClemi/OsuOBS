@@ -36,13 +36,23 @@ private:
 
 
 public:
-	void RegWebInfoCallback( BmWebQueryFunc f )
+	size_t RegWebInfoCallback( BmWebQueryFunc f )
 	{
 		m_bUseBmInfo = true;
 
 		std::lock_guard< std::mutex > l( m_cs );
 		m_vecCallback.push_back( f );
+
+		return m_vecCallback.size( ) - 1;
 	}
+
+	void UnregWebInfoCallback( size_t nId )
+	{
+		std::lock_guard< std::mutex > l( m_cs );
+		m_vecCallback.erase( m_vecCallback.begin( ) + nId );
+	}
+
+
 
 	void QueryBeatmapDifficulty( sBeatmapQuery* pQuery )
 	{

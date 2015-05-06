@@ -9,7 +9,7 @@ CBeatmapInfoSource::CBeatmapInfoSource( XElement* pData )
 {
 	this->SetString( L"text", L"[Beatmap info]" );
 
-	CCore::GetInstance( )->RegBmChangedEvent( [ this ]( sBeatmapInfo* pInfo )
+	m_nCallbackId = CCore::GetInstance( )->RegBmChangedEvent( [ this ]( sBeatmapInfo* pInfo )
 	{
 		lock_guard< mutex >	l( m_cs );
 
@@ -57,6 +57,7 @@ CBeatmapInfoSource::CBeatmapInfoSource( XElement* pData )
 
 CBeatmapInfoSource::~CBeatmapInfoSource( )
 {
+	CCore::GetInstance( )->UnregBmChangedEvent( m_nCallbackId );
 }
 
 void CBeatmapInfoSource::Tick( float fSeconds )

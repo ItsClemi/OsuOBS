@@ -11,7 +11,7 @@ CUserRankSource::CUserRankSource( XElement* pData )
 	this->SetString( L"text", L"[Performance]" );
 
 	//=> TODO: IsDirty check
-	CCore::GetInstance( )->GetUserInfo( )->RegisterCallbackPerformance( [ this ]( std::shared_ptr< std::wstring > szPerformance ){ 
+	m_nCallbackId = CCore::GetInstance( )->GetUserInfo( )->RegisterCallbackPerformance( [ this ]( std::shared_ptr< std::wstring > szPerformance ){ 
 		std::lock_guard< std::mutex > l( m_cs );
 
 		m_szPerformance = *szPerformance;
@@ -20,6 +20,7 @@ CUserRankSource::CUserRankSource( XElement* pData )
 
 CUserRankSource::~CUserRankSource( )
 {
+	CCore::GetInstance( )->GetUserInfo( )->UnregisterCallbackPerformance( m_nCallbackId );
 }
 
 void CUserRankSource::Tick( float fSeconds )

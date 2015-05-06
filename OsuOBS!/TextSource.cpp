@@ -4,7 +4,7 @@
 
 //=> Taken out of OBS source 
 
-TextOutputSource::TextOutputSource( XElement* data ) 
+TextOutputSource::TextOutputSource( XElement* data )
 	: m_pData( data )
 {
 	UpdateSettings( );
@@ -97,10 +97,10 @@ void TextOutputSource::Render( const Vect2 &pos, const Vect2 &size )
 					LoadVertexShader( pCore->m_pSolidVertexShader );
 					LoadPixelShader( pCore->m_pSolidPixelShader );
 				}
-	
+
 				//App->solidPixelShader->SetColor( App->solidPixelShader->GetParameter( 0 ), rectangleColor );
- 				//LoadVertexShader( App->solidVertexShader );
- 				//LoadPixelShader( App->solidPixelShader );
+				//LoadVertexShader( App->solidVertexShader );
+				//LoadPixelShader( App->solidPixelShader );
 
 				DrawBox( pos, extentVal );
 
@@ -183,7 +183,6 @@ void TextOutputSource::UpdateSettings( )
 	align = m_pData->GetInt( TEXT( "align" ), 0 );
 	strFile = m_pData->GetString( TEXT( "file" ) );
 	strText = m_pData->GetString( TEXT( "text" ) );
-	mode = m_pData->GetInt( TEXT( "mode" ), 0 );
 	bUsePointFiltering = m_pData->GetInt( TEXT( "pointFiltering" ), 0 ) != 0;
 
 	baseSize.x = m_pData->GetFloat( TEXT( "baseSizeCX" ), MIN_TEX_SIZE_W );
@@ -252,8 +251,6 @@ void TextOutputSource::SetInt( CTSTR lpName, int iValue )
 	}
 	else if( scmpi( lpName, TEXT( "align" ) ) == 0 )
 		align = iValue;
-	else if( scmpi( lpName, TEXT( "mode" ) ) == 0 )
-		mode = iValue;
 	else if( scmpi( lpName, TEXT( "useOutline" ) ) == 0 )
 		bUseOutline = iValue != 0;
 	else if( scmpi( lpName, TEXT( "outlineColor" ) ) == 0 )
@@ -340,27 +337,7 @@ void TextOutputSource::UpdateCurrentText( )
 		bMonitoringFileChanges = false;
 	}
 
-	if( mode == 0 )
-		strCurrentText = strText;
-
-	else if( mode == 1 && strFile.IsValid( ) )
-	{
-		XFile textFile;
-		if( textFile.Open( strFile, XFILE_READ | XFILE_SHARED, XFILE_OPENEXISTING ) )
-		{
-			textFile.ReadFileToString( strCurrentText );
-		}
-		else
-		{
-			strCurrentText = TEXT( "" );
-			AppWarning( TEXT( "TextSource::UpdateTexture: could not open specified file (invalid file name or access violation)" ) );
-		}
-
-		if( fileChangeMonitor = OSMonitorFileStart( strFile ) )
-			bMonitoringFileChanges = true;
-	}
-	else
-		strCurrentText = TEXT( "" );
+	strCurrentText = strText;
 }
 
 void TextOutputSource::SetStringFormat( Gdiplus::StringFormat &format )
@@ -995,7 +972,6 @@ INT_PTR CALLBACK ConfigureTextProc( HWND hwnd, UINT message, WPARAM wParam, LPAR
 					BOOL bUseOutline = SendMessage( GetDlgItem( hwnd, IDC_USEOUTLINE ), BM_GETCHECK, 0, 0 ) == BST_CHECKED;
 					float outlineSize = ( float )SendMessage( GetDlgItem( hwnd, IDC_OUTLINETHICKNESS ), UDM_GETPOS32, 0, 0 );
 
-					int mode = SendMessage( GetDlgItem( hwnd, IDC_USEFILE ), BM_GETCHECK, 0, 0 ) == BST_CHECKED;
 
 					UINT extentWidth = ( UINT )SendMessage( GetDlgItem( hwnd, IDC_EXTENTWIDTH ), UDM_GETPOS32, 0, 0 );
 					UINT extentHeight = ( UINT )SendMessage( GetDlgItem( hwnd, IDC_EXTENTHEIGHT ), UDM_GETPOS32, 0, 0 );
@@ -1130,7 +1106,6 @@ INT_PTR CALLBACK ConfigureTextProc( HWND hwnd, UINT message, WPARAM wParam, LPAR
 					data->SetInt( TEXT( "align" ), ( int )SendMessage( GetDlgItem( hwnd, IDC_ALIGN ), CB_GETCURSEL, 0, 0 ) );
 
 					data->SetString( TEXT( "text" ), L"text" );
-					data->SetInt( TEXT( "mode" ), mode );
 				}
 
 				case IDCANCEL:
@@ -1161,21 +1136,33 @@ bool STDCALL ConfigureTextSource( XElement *element, bool bCreating, bool bUsePa
 		data = element->CreateElement( TEXT( "data" ) );
 
 	ConfigTextSourceInfo configInfo;
-	if( bUseParent )
-	{
-		configInfo.lpName = element->GetParent( )->GetName();
-	}
-	else
-	{
+// 	if( bUseParent )
+// 	{
+// 		configInfo.lpName = element->GetParent( )->GetName( );
+// 	}
+// 	else
+// 	{
 		configInfo.lpName = element->GetName( );
-	}
+//	}
 
 	configInfo.data = data;
 
 	if( OBSDialogBox( g_hInstance, MAKEINTRESOURCE( IDD_SETUPFONT ), API->GetMainWindow( ), ConfigureTextProc, ( LPARAM )&configInfo ) == IDOK )
 	{
-		element->SetFloat( TEXT( "cx" ), configInfo.cx );
-		element->SetFloat( TEXT( "cy" ), configInfo.cy );
+// 		if( bUseParent )
+// 		{
+// 			XElement* pEle = element->GetParent( );
+// 
+// 			pEle->SetFloat( TEXT( "cx" ), configInfo.cx );
+// 			element->GetParent( )->SetFloat( TEXT( "cy" ), configInfo.cy );
+// 		}
+// 		else
+// 		{
+			element->SetFloat( TEXT( "cx" ), configInfo.cx );
+			element->SetFloat( TEXT( "cy" ), configInfo.cy );
+//		}
+
+
 
 		return true;
 	}

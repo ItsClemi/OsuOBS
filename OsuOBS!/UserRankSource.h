@@ -14,6 +14,7 @@ private:
 	std::mutex		m_cs;
 	std::wstring	m_szPerformance;
 
+	size_t			m_nCallbackId;
 };
 
 ImageSource* STDCALL _SourceUserRank( XElement *data );

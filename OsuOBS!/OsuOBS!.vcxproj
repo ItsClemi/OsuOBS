@@ -81,6 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\..\OBS-master\OBSApi;..\jsoncpp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -155,7 +156,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../../OBS-master/OBSApi/x64/Debug</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>if "$(Platform)" == "Win32" (
+    echo "OsuOSB!: Copying x86 version to OBS\plugins folder"
+    copy “$(OutDir)$(TargetName)$(TargetExt)” “C:\Program Files (x86)\OBS\plugins"
+) else (
+    echo "OsuOSB!: Copying x64 version to OBS\plugins folder"
+    copy “$(OutDir)$(TargetName)$(TargetExt)” “C:\Program Files\OBS\plugins"
+)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />

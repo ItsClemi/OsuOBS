@@ -24,9 +24,11 @@ public:
 	UINT		GetUserId( )			{ return m_nBanchoId; }
 	eGameMode	GetGameMode( )			{ return m_eGameMode; }
 
+
 public:
 	void SetUserId( UINT nId )			{ m_nBanchoId = nId; }
 	void SetGameMode( eGameMode e )		{ m_eGameMode = e; }
+
 
 public:
 	std::wstring GetProcessName( ){

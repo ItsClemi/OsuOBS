@@ -38,15 +38,6 @@ void CProcessInfo::StopProcessInfo( )
 {
 	SetEvent( m_hKillProcessInfo );
 	m_threadInfo.join( );
-
-	lock_guard< mutex >l( m_cs );
-	m_vecCallbacks.clear( );
-}
-
-void CProcessInfo::RegBmChangedEvent( BmCallback f )
-{
-	lock_guard< mutex > l( m_cs );
-	m_vecCallbacks.push_back( f );
 }
 
 

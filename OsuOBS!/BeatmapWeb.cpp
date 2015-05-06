@@ -32,7 +32,6 @@ void CBeatmapWeb::StartBeatmapWebThread( )
 		{
 			QueryBeatmapDifficulty( new sBeatmapQuery( pInfo->m_szDifficulty, pInfo->m_nBeatmapId, pInfo->m_nBeatmapSetId ) );
 		}
-
 	} );
 
 
@@ -115,9 +114,6 @@ void CBeatmapWeb::StopBeatmapWebThread( )
 {
 	SetEvent( m_hKillBmWeb );
 	m_threadWebThread.join( );
-
-	lock_guard< mutex >l( m_cs );
-	m_vecCallback.clear( );
 }
 
 std::wstring CBeatmapWeb::BmSetIdToBmId( ComPtr<IXMLHTTPRequest>& pReq, wchar_t* szStr, sBeatmapQuery* pQuery )

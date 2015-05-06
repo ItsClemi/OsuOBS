@@ -13,6 +13,8 @@ public:
 	virtual void Tick( float fSeconds );
 
 private:
+	size_t		m_nCallbackId;
+
 	std::mutex	m_cs;
 
 	float		m_fDifficulty = 0.0f;

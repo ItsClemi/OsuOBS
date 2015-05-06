@@ -37,7 +37,6 @@ OBSEXPORT bool LoadPlugin( )
 	API->RegisterImageSourceClass( L"OSUOBS-USRA", L"[OSUOBS]User recent activity", ( OBSCREATEPROC )_SourceUserRecentInfo, ( OBSCONFIGPROC )_SourceConfigUserRecentInfo );
 
 
-
 	return true;
 }
 

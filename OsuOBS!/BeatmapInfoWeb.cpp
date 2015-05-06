@@ -11,7 +11,8 @@ CBeatmapInfoWeb::CBeatmapInfoWeb( XElement* pData )
 {
 	this->SetString( L"text", L"[WebInfo]" );
 
-	CCore::GetInstance( )->GetBmInfoWeb( )->RegWebInfoCallback( [ this ]( sBeatmapQuery* pQuery ){
+	m_nCallbackId = CCore::GetInstance( )->GetBmInfoWeb( )->RegWebInfoCallback( [ this ]( sBeatmapQuery* pQuery )
+	{
 		std::lock_guard< std::mutex > l( m_cs );
 		{
 			if( pQuery == nullptr )
@@ -31,6 +32,7 @@ CBeatmapInfoWeb::CBeatmapInfoWeb( XElement* pData )
 
 CBeatmapInfoWeb::~CBeatmapInfoWeb( )
 {
+	CCore::GetInstance( )->GetBmInfoWeb( )->UnregWebInfoCallback( m_nCallbackId );
 }
 
 void CBeatmapInfoWeb::Tick( float fSeconds )
@@ -48,7 +50,7 @@ void CBeatmapInfoWeb::Tick( float fSeconds )
 			else
 			{
 				wchar_t szBuff[ 32 ];
-				swprintf_s( szBuff, L"S: %.1f", m_fDifficulty );
+				swprintf_s( szBuff, L"Stars: %.1f", m_fDifficulty );
 
 				this->SetString( L"text", szBuff );
 			}

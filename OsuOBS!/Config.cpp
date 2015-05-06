@@ -70,7 +70,6 @@ void CConfig::SaveConfig( )
 	root[ "BanchoId" ] = m_nBanchoId.load( );
 	root[ "GameMode" ] = m_eGameMode.load( );
 
-
 	ofstream myfile;
 	myfile.open( s_szConfigPath, ios::binary | ios::trunc );
 	{

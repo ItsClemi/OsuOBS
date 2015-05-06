@@ -6,17 +6,16 @@
 
 
 
-
 CBeatmapName::CBeatmapName( XElement* pData ) : TextOutputSource( pData )
 {
 	this->SetString( L"text", L"[BeatmapName]" );
 
-	CCore::GetInstance( )->RegBmChangedEvent( [ this ]( sBeatmapInfo* pInfo ){
+	m_nCallbackId = CCore::GetInstance( )->RegBmChangedEvent( [ this ]( sBeatmapInfo* pInfo ){
 		std::lock_guard< std::mutex > l( m_cs );
 
 		if( pInfo == nullptr )
 		{
-			m_szName = L"Selecting beatmap!";
+			m_szName = L"Selecting beatmap";
 		}
 		else
 		{
@@ -29,6 +28,7 @@ CBeatmapName::CBeatmapName( XElement* pData ) : TextOutputSource( pData )
 
 CBeatmapName::~CBeatmapName( )
 {
+	CCore::GetInstance( )->UnregBmChangedEvent( m_nCallbackId );
 }
 
 void CBeatmapName::Tick( float fSeconds )

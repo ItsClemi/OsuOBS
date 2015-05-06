@@ -5,7 +5,6 @@
 using namespace std;
 using namespace tr2;
 using namespace sys;
-using namespace Concurrency;
 
 
 CBeatmapInfo::CBeatmapInfo( )
@@ -18,10 +17,10 @@ CBeatmapInfo::~CBeatmapInfo( )
 
 
 //=> TODO: Rewrite it a bit :D
-task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szTitle )
+Concurrency::task< sBeatmapInfo* > CBeatmapInfo::GetInfo( std::shared_ptr< std::wstring > szTitle )
 {
-	return create_task( [ this, szTitle ]( ){
-		if( szTitle == nullptr )
+	return Concurrency::create_task( [ this, szTitle ]( ){
+		if( szTitle == nullptr || szTitle->find( L" (watching " ) != wstring::npos )
 		{
 			//=>weird vc bug?
 			return static_cast< sBeatmapInfo* >( nullptr );

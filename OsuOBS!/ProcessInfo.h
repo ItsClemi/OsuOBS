@@ -15,7 +15,22 @@ public:
 	void StartProcessInfo( );
 	void StopProcessInfo( );
 
-	void RegBmChangedEvent( BmCallback f );
+public:
+	size_t CProcessInfo::RegBmChangedEvent( BmCallback f )
+	{
+		std::lock_guard< std::mutex > l( m_cs );
+		m_vecCallbacks.push_back( f );
+		
+		return m_vecCallbacks.size( ) - 1;
+	}
+
+	void CProcessInfo::UnregBmChangedEvent( size_t nId )
+	{
+		std::lock_guard< std::mutex > l( m_cs );
+		m_vecCallbacks.erase( m_vecCallbacks.begin( ) + nId );
+	}
+
+
 
 public:
 	async std::tr2::sys::wpath GetProcessPath( )

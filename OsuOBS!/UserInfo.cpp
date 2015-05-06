@@ -209,14 +209,4 @@ void CUserInfo::StopUserThread( )
 {
 	SetEvent( m_hKillUserThread );
 	m_threadUser.join( );
-
-	lock_guard< mutex > lA( m_csA );
-	{
-		m_vecActivity.clear( );
-	}
-
-	lock_guard< mutex > lP( m_csP );
-	{
-		m_vecPerformance.clear( );
-	}
 }
