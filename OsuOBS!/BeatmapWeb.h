@@ -1,4 +1,6 @@
 #pragma once
+#include "CallbackHelper.h"
+
 
 struct sBeatmapQuery
 {
@@ -41,18 +43,19 @@ public:
 		m_bUseBmInfo = true;
 
 		std::lock_guard< std::mutex > l( m_cs );
-		m_vecCallback.push_back( f );
 
-		return m_vecCallback.size( ) - 1;
+		size_t nId = ( size_t )rand( );
+		{
+			m_vecCallback.push_back( make_pair( nId, f ) );
+		}
+		return nId;
 	}
 
 	void UnregWebInfoCallback( size_t nId )
 	{
 		std::lock_guard< std::mutex > l( m_cs );
-		m_vecCallback.erase( m_vecCallback.begin( ) + nId );
+		RemoveCallback( m_vecCallback, nId );
 	}
-
-
 
 	void QueryBeatmapDifficulty( sBeatmapQuery* pQuery )
 	{
@@ -72,7 +75,7 @@ private:
 	std::mutex		m_cs;
 
 
-	std::vector< BmWebQueryFunc >						m_vecCallback;
-	Concurrency::concurrent_queue< sBeatmapQuery* >		m_queueQuery;
+	std::vector< std::pair< size_t, BmWebQueryFunc > >		m_vecCallback;
+	Concurrency::concurrent_queue< sBeatmapQuery* >			m_queueQuery;
 };
 

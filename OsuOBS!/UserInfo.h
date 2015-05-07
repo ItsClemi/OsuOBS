@@ -1,4 +1,6 @@
 #pragma once
+#include "CallbackHelper.h"
+
 
 
 class CUserInfo
@@ -17,29 +19,38 @@ public:
 public:
 	size_t RegisterCallbackPerformance( fCallbackPerformance f ) {
 		std::lock_guard< std::mutex > l( m_csP );
-		m_vecPerformance.push_back( f );
 
-		return m_vecPerformance.size( ) - 1;
+		size_t nId = ( size_t )rand( );
+		{
+			m_vecPerformance.push_back( make_pair( nId, f ) );
+		}
+		return nId;
 	}
 
 	size_t RegisterCallbackActivity( fCallbackActivity f ) {
 		std::lock_guard< std::mutex > l( m_csA );
-		m_vecActivity.push_back( f );
 
-		return m_vecActivity.size( ) - 1;
+
+		size_t nId = ( size_t )rand( );
+		{
+			m_vecActivity.push_back( make_pair( nId, f ) );
+		}
+		return nId;
 	}
 
 public:
 	void UnregisterCallbackActivity( size_t nId )
 	{
 		std::lock_guard< std::mutex > l( m_csA );
-		m_vecActivity.erase( m_vecActivity.begin( ) + nId );
+
+		RemoveCallback( m_vecActivity, nId );
 	}
 
 	void UnregisterCallbackPerformance( size_t nId )
 	{
 		std::lock_guard< std::mutex > l( m_csP );
-		m_vecPerformance.erase( m_vecPerformance.begin( ) + nId );
+
+		RemoveCallback( m_vecPerformance, nId );
 	}
 
 
@@ -68,7 +79,7 @@ private:
 	std::mutex		m_csA;
 	std::mutex		m_csP;
 
-	std::vector< fCallbackPerformance >	m_vecPerformance;
-	std::vector< fCallbackActivity >	m_vecActivity;
+	std::vector< std::pair< size_t, fCallbackPerformance > >	m_vecPerformance;
+	std::vector< std::pair< size_t, fCallbackActivity >	>		m_vecActivity;
 };
 

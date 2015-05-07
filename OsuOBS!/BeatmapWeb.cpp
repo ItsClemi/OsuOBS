@@ -24,7 +24,7 @@ void CBeatmapWeb::StartBeatmapWebThread( )
 			m_cs.lock( );
 			{
 				for( auto i : m_vecCallback )
-					i( nullptr );
+					i.second( nullptr );
 			}
 			m_cs.unlock( );
 		}
@@ -90,7 +90,7 @@ void CBeatmapWeb::StartBeatmapWebThread( )
 									m_cs.lock( );
 									{
 										for( auto i : m_vecCallback )
-											i( pQuery );
+											i.second( pQuery );
 									}
 									m_cs.unlock( );
 								}

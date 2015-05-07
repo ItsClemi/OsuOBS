@@ -149,7 +149,7 @@ void CUserInfo::StartUserThread( )
 						m_csA.lock( );
 						{
 							for( auto i : m_vecActivity )
-								i( vec );
+								i.second( vec );
 						}
 						m_csA.unlock( );
 					}
@@ -180,7 +180,7 @@ void CUserInfo::StartUserThread( )
 						{
 							for( auto i : m_vecPerformance )
 							{
-								i( make_shared< wstring >( szPerformance ) );
+								i.second( make_shared< wstring >( szPerformance ) );
 							}
 						}
 						m_csP.unlock( );

@@ -68,7 +68,7 @@ async void CProcessInfo::CheckBmChanged( )
 			lock_guard< mutex > l( m_cs );
 
 			for( auto f : m_vecCallbacks )
-				f( pInfo );
+				f.second( pInfo );
 		} );
 
 		s_nOldTitleLen = n;

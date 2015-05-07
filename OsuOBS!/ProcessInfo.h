@@ -1,5 +1,5 @@
 #pragma once
-
+#include "CallbackHelper.h"
 
 struct sBeatmapInfo;
 class CProcessInfo
@@ -19,17 +19,20 @@ public:
 	size_t CProcessInfo::RegBmChangedEvent( BmCallback f )
 	{
 		std::lock_guard< std::mutex > l( m_cs );
-		m_vecCallbacks.push_back( f );
-		
-		return m_vecCallbacks.size( ) - 1;
+
+		size_t nId = ( size_t )rand( );
+		{
+			m_vecCallbacks.push_back( make_pair( nId, f ) );
+		}
+		return nId;
 	}
 
 	void CProcessInfo::UnregBmChangedEvent( size_t nId )
 	{
 		std::lock_guard< std::mutex > l( m_cs );
-		m_vecCallbacks.erase( m_vecCallbacks.begin( ) + nId );
-	}
 
+		RemoveCallback( m_vecCallbacks, nId );
+	}
 
 
 public:
@@ -61,6 +64,6 @@ private:
 	std::thread				m_threadInfo;
 
 
-	std::vector< BmCallback >	m_vecCallbacks;
+	std::vector< std::pair< size_t, BmCallback > >	m_vecCallbacks;
 };
 

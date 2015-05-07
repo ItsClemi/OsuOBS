@@ -133,6 +133,9 @@
     <ClInclude Include="Dialog2.h">
       <Filter>Dialog</Filter>
     </ClInclude>
+    <ClInclude Include="CallbackHelper.h">
+      <Filter>Common\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OsuOBS!.rc">

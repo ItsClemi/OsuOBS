@@ -70,7 +70,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\OBS-master\OBSApi;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\OBS-master\OBSApi;..\jsoncpp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -78,6 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\..\OBS-master\OBSApi;..\jsoncpp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -94,8 +95,13 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\OBS-master\OBSApi\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../OBS-master/OBSApi/Debug</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>echo "OsuOSB!: Copying x86 version to OBS\plugins folder"
+copy “$(OutDir)$(TargetName)$(TargetExt)” “C:\Program Files (x86)\OBS\plugins"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -138,7 +144,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../../OBS-master/OBSApi/Debug</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>echo "OsuOSB!: Copying x86 version to OBS\plugins folder"
+copy “$(OutDir)$(TargetName)$(TargetExt)” “C:\Program Files (x86)\OBS\plugins"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -196,6 +207,7 @@
     <ClInclude Include="BeatmapInfoWeb.h" />
     <ClInclude Include="BeatmapName.h" />
     <ClInclude Include="BeatmapWeb.h" />
+    <ClInclude Include="CallbackHelper.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Dialog2.h" />
