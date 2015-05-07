@@ -18,7 +18,7 @@ using namespace std;
 
 namespace{
 	static const int		s_nConfigVer = 01;
-	static const wchar_t*	s_szConfigPath = L".\\plugins\\OsuOBS!_config.json";
+	static const wchar_t*	s_szConfigPath = L"\\OsuOBS!_config.json";
 }
 
 
@@ -40,13 +40,13 @@ CConfig* CConfig::GetInstance( )
 
 void CConfig::LoadConfig( )
 {
-	ifstream f( s_szConfigPath, std::ifstream::binary );
+	ifstream f( GetSavePath(), std::ifstream::binary );
 	if( f.is_open( ) == false )
 	{
 		Log( L"OsuOBS!| Info | Config not found. Defaulting values!" );
 		return;
 	}
-
+	
 	Json::Value root;
 	f >> root;
 
@@ -71,7 +71,7 @@ void CConfig::SaveConfig( )
 	root[ "GameMode" ] = m_eGameMode.load( );
 
 	ofstream myfile;
-	myfile.open( s_szConfigPath, ios::binary | ios::trunc );
+	myfile.open( GetSavePath( ), ios::binary | ios::trunc );
 	{
 		myfile << root;
 	}
@@ -79,6 +79,14 @@ void CConfig::SaveConfig( )
 }
 
 
+
+std::wstring CConfig::GetSavePath( )
+{
+	wchar_t szBuff[ MAX_PATH ] = { 0 };
+	::GetEnvironmentVariable( L"USERPROFILE", szBuff, MAX_PATH );
+
+	return std::wstring( szBuff ) + std::wstring( s_szConfigPath );
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -38,6 +38,9 @@ public:
 
 
 private:
+	std::wstring GetSavePath( );
+
+private:
 	std::atomic< UINT >			m_nBanchoId = 0;
 	std::atomic< eGameMode >	m_eGameMode = eGameMode::eGameModeOsu;
 
