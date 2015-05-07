@@ -14,6 +14,9 @@ private:
 	std::mutex		m_cs;
 	std::wstring	m_szPerformance;
 
+	bool			m_bIsDirty = false;
+
+
 	size_t			m_nCallbackId;
 };
 

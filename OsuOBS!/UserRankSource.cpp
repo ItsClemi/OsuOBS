@@ -10,11 +10,14 @@ CUserRankSource::CUserRankSource( XElement* pData )
 {
 	this->SetString( L"text", L"[Performance]" );
 
-	//=> TODO: IsDirty check
 	m_nCallbackId = CCore::GetInstance( )->GetUserInfo( )->RegisterCallbackPerformance( [ this ]( std::shared_ptr< std::wstring > szPerformance ){ 
 		std::lock_guard< std::mutex > l( m_cs );
 
-		m_szPerformance = *szPerformance;
+		if( m_szPerformance != *szPerformance )
+		{
+			m_szPerformance = *szPerformance;
+			m_bIsDirty = true;
+		}
 	} );
 }
 
@@ -29,7 +32,12 @@ void CUserRankSource::Tick( float fSeconds )
 
 	if( m_cs.try_lock( ) )
 	{
-		this->SetString( L"text", m_szPerformance.c_str( ) );
+		if( m_bIsDirty )
+		{
+			this->SetString( L"text", m_szPerformance.c_str( ) );
+
+			m_bIsDirty = false;
+		}
 			
 		m_cs.unlock( );
 	}
